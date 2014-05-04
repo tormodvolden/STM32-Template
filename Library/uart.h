@@ -5,5 +5,7 @@ int uart_open(USART_TypeDef* USARTx, uint32_t baud, uint32_t flags);
 int uart_close(USART_TypeDef* USARTx);
 int uart_putc(int c, USART_TypeDef* USARTx);
 int uart_getc(USART_TypeDef* USARTx);
+int uart_getc_timeout(USART_TypeDef* USARTx, int timeout);
+int print_uart(USART_TypeDef* USARTx, char *string);
 
 #endif

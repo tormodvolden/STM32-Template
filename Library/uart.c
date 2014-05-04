@@ -104,3 +104,25 @@ int uart_getc (USART_TypeDef* USARTx)
   return  USARTx->DR & 0xff;
 }
 
+extern __IO uint32_t TimingDelay;
+
+int uart_getc_timeout (USART_TypeDef* USARTx, int timeout)
+{
+  assert_param(IS_USART_123_PERIPH(USARTx));
+
+  TimingDelay = timeout;
+  while (USART_GetFlagStatus(USARTx, USART_FLAG_RXNE) == RESET && TimingDelay > 0);
+  if (TimingDelay > 0)
+	return  USARTx->DR & 0xff;
+  else
+	return 0;
+}
+
+int print_uart(USART_TypeDef *USARTx, char *str)
+{
+	char *c;
+
+	for(c = str; *c ; c++)
+		uart_putc(*c, USARTx);
+	return c-str;
+}
