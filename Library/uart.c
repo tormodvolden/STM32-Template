@@ -47,7 +47,38 @@ int uart_open (USART_TypeDef* USARTx, uint32_t baud, uint32_t flags)
     USART_Cmd(USART1, ENABLE); 
 
     return 0;
-  } 
+
+  } else if (USARTx == USART2) {
+
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA  |
+			   RCC_APB2Periph_AFIO,
+			   ENABLE);
+
+    RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
+
+    // Configure TX pin
+
+    GPIO_InitStructureTx.GPIO_Pin = GPIO_Pin_2;
+    GPIO_InitStructureTx.GPIO_Mode = GPIO_Mode_AF_PP;
+    GPIO_InitStructureTx.GPIO_Speed = GPIO_Speed_50MHz; 
+    GPIO_Init(GPIOA, &GPIO_InitStructureTx);
+
+    // Configure RX pin
+
+    GPIO_InitStructureRx.GPIO_Pin = GPIO_Pin_3;
+    GPIO_InitStructureRx.GPIO_Mode = GPIO_Mode_IN_FLOATING;
+    GPIO_Init(GPIOA, &GPIO_InitStructureRx);
+
+    // Configure the UART
+
+    USART_StructInit(&USART_InitStructure); 
+    USART_InitStructure.USART_BaudRate = baud;
+    USART_InitStructure.USART_Mode  = USART_Mode_Rx | USART_Mode_Tx;
+    USART_Init(USART2,&USART_InitStructure); 
+    USART_Cmd(USART2, ENABLE); 
+
+    return 0;
+  }
 }
 
 
